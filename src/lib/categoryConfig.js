@@ -2,28 +2,28 @@ import {
   IconMoodHappy,
   IconUsers,
   IconShield,
-  IconMusic,
   IconSun,
-  IconMoodSmile,
   IconBallBasketball,
   IconStar,
-  IconCamera,
-  IconShirt,
+  IconHeartHandshake,
+  IconAnchor,
+  IconSpeakerphone,
+  IconBook,
   IconMessageCircle,
   IconDeviceMobile,
   IconCookie,
-  IconCar,
-  IconSpeakerphone,
   IconGhost,
   IconSword,
   IconHourglass,
   IconBellOff,
   IconCup,
+  IconMapPinOff,
+  IconBriefcase,
   IconBrain
 } from '@tabler/icons-react';
 
 const CATEGORY_MAP = {
-  'Class Clown': {
+  'Best Sense of Humor': {
     icon: IconMoodHappy,
     description: 'Always makes the whole room laugh.',
   },
@@ -35,17 +35,9 @@ const CATEGORY_MAP = {
     icon: IconShield,
     description: 'Always looking out for the rest of us.',
   },
-  'Best Playlist': {
-    icon: IconMusic,
-    description: 'The ultimate designated aux cord DJ.',
-  },
   'Human Sunshine': {
     icon: IconSun,
     description: 'Always positive, smiling, and full of good vibes.',
-  },
-  'Best Smile': {
-    icon: IconMoodSmile,
-    description: 'Infectious smile that brightens the day.',
   },
   'Most Athletic': {
     icon: IconBallBasketball,
@@ -55,13 +47,21 @@ const CATEGORY_MAP = {
     icon: IconStar,
     description: 'Naturally the center of attention.',
   },
-  'Most Likely to be Famous': {
-    icon: IconCamera,
-    description: 'Destined for the spotlight and millions of followers.',
+  'Best Advice Giver': {
+    icon: IconHeartHandshake,
+    description: 'The go-to person when things get tough.',
   },
-  'Best Drip': {
-    icon: IconShirt,
-    description: 'Always stepping out in the freshest fits.',
+  'Most Dependable': {
+    icon: IconAnchor,
+    description: 'Always there when you need them most.',
+  },
+  'Ultimate Hype Man': {
+    icon: IconSpeakerphone,
+    description: 'Loudest cheerleader for everyone else.',
+  },
+  'Best Storyteller': {
+    icon: IconBook,
+    description: 'Can make a trip to the grocery store sound epic.',
   },
   'Biggest Gossip': {
     icon: IconMessageCircle,
@@ -74,14 +74,6 @@ const CATEGORY_MAP = {
   'Snack Bandit': {
     icon: IconCookie,
     description: 'Always asking for "just one bite".',
-  },
-  'Worst Driver': {
-    icon: IconCar,
-    description: 'Terrifying behind the wheel.',
-  },
-  'Chronic Exaggerator': {
-    icon: IconSpeakerphone,
-    description: 'Turns every small event into a Hollywood drama.',
   },
   'The Ghost': {
     icon: IconGhost,
@@ -102,6 +94,14 @@ const CATEGORY_MAP = {
   'Caffeine Addict': {
     icon: IconCup,
     description: 'Blood type is practically 90% coffee at this point.',
+  },
+  'Zero Sense of Direction': {
+    icon: IconMapPinOff,
+    description: 'Gets lost going to a classroom they’ve been to 100 times.',
+  },
+  'Chronic Over-Packer': {
+    icon: IconBriefcase,
+    description: 'Brings enough supplies for a week-long camping trip.',
   },
 };
 
