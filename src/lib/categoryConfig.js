@@ -16,6 +16,7 @@ const CATEGORY_MAP = {
   'Class Crush': { icon: IconHeart, description: 'The one everyone secretly (or openly) likes.' },
   'Sticker King': { icon: IconSticker, description: 'Has a meme or sticker for every possible situation.' },
   'Content Machine': { icon: IconVideo, description: 'Always recording, snapping, or vlogging the moment.' },
+  'Big Brain Energy': { icon: IconBrain, description: 'The actual human ChatGPT. Hard carries group projects.' },
 
   // Negative / Funny
   'Biggest Gossip': { icon: IconMessageCircle, description: 'The official source for spilled tea.' },

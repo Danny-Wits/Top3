@@ -79,10 +79,17 @@ export const useCategories = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('categories')
-        .select('*')
-        .order('id');
+        .select('*');
       if (error) throw error;
-      return data;
+
+      // Group visually by parsing the types in order
+      const typeOrder = { positive: 1, negative: 2, most_likely: 3 };
+      return data.sort((a, b) => {
+        if (typeOrder[a.type] !== typeOrder[b.type]) {
+          return typeOrder[a.type] - typeOrder[b.type];
+        }
+        return a.id - b.id; // secondary sort by ID
+      });
     },
   });
 };

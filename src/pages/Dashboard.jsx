@@ -1,8 +1,8 @@
 import React from 'react';
-import { Title, Card, Text, Badge, Container, Group, Center, Loader, Box, Stack, ThemeIcon, Image } from '@mantine/core';
+import { Title, Card, Text, Badge, Container, Group, Center, Loader, Box, Stack, ThemeIcon, Image, TextInput } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { useCategories, useVoteTracking } from '../hooks/useVotes';
-import { IconLock, IconChevronRight } from '@tabler/icons-react';
+import { IconLock, IconChevronRight, IconSearch } from '@tabler/icons-react';
 import { getCategoryConfig } from '../lib/categoryConfig';
 
 /**
@@ -15,13 +15,17 @@ export default function Dashboard() {
   const { data: categories, isLoading: isCategoriesLoading } = useCategories();
   const { data: completedCategories, isLoading: isTrackingLoading } = useVoteTracking();
 
+  const [searchQuery, setSearchQuery] = React.useState('');
+
   if (isCategoriesLoading || isTrackingLoading) {
     return <Center style={{ height: '60dvh' }}><Loader color="indigo" size="lg" /></Center>;
   }
 
-  const positiveCategories = categories?.filter(c => c.type === 'positive') || [];
-  const negativeCategories = categories?.filter(c => c.type === 'negative') || [];
-  const mostLikelyCategories = categories?.filter(c => c.type === 'most_likely') || [];
+  const filteredCategories = categories?.filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase())) || [];
+
+  const positiveCategories = filteredCategories.filter(c => c.type === 'positive');
+  const negativeCategories = filteredCategories.filter(c => c.type === 'negative');
+  const mostLikelyCategories = filteredCategories.filter(c => c.type === 'most_likely');
 
   return (
     <Container size="xs" px="md">
@@ -29,9 +33,17 @@ export default function Dashboard() {
       {/* Subheading */}
       <Box mb="lg">
         <Title order={3} fw={700}>Vote Now</Title>
-        <Text c="dimmed" size="sm" mt={4}>
+        <Text c="dimmed" size="sm" mt={4} mb="md">
           Select your top picks for the class superlatives.
         </Text>
+        <TextInput
+          placeholder="Search categories..."
+          leftSection={<IconSearch size={16} />}
+          value={searchQuery}
+          onChange={(event) => setSearchQuery(event.currentTarget.value)}
+          size="md"
+          radius="md"
+        />
       </Box>
 
       {/* ---- POSITIVE SECTION ---- */}
@@ -81,6 +93,12 @@ export default function Dashboard() {
           />
         ))}
       </Stack>
+      
+      {filteredCategories.length === 0 && (
+        <Center mt="xl">
+          <Text c="dimmed">No categories found matching "{searchQuery}"</Text>
+        </Center>
+      )}
     </Container>
   );
 }

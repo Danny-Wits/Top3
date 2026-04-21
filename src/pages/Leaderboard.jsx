@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
 import {
   Container, Title, Text, Center, Loader, Group, Box, ThemeIcon,
-  Card, Stack, Badge, Avatar, ScrollArea, UnstyledButton, Progress, Image,
+  Card, Stack, Badge, Avatar, ScrollArea, UnstyledButton, Progress, Image, TextInput
 } from '@mantine/core';
 import { useCategories, useLeaderboard, useAllProfiles } from '../hooks/useVotes';
-import { IconTrophy, IconMedal, IconAward, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { IconTrophy, IconMedal, IconAward, IconChevronLeft, IconChevronRight, IconSearch } from '@tabler/icons-react';
 import { getCategoryConfig } from '../lib/categoryConfig';
 import { getStudentName, getInitials } from '../lib/studentNames';
 
@@ -17,6 +17,7 @@ export default function Leaderboard() {
   const { data: leaderboard, isLoading: isLeadLoading } = useLeaderboard();
   const { data: profiles } = useAllProfiles();
   const [activeIndex, setActiveIndex] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
   const scrollRef = useRef(null);
 
   // Touch swipe state
@@ -27,8 +28,10 @@ export default function Leaderboard() {
     return <Center style={{ height: '60dvh' }}><Loader color="indigo" size="lg" /></Center>;
   }
 
-  const activeCategory = categories?.[activeIndex];
-  const totalCategories = categories?.length || 0;
+  const filteredCategories = categories?.filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase())) || [];
+
+  const activeCategory = filteredCategories?.[activeIndex];
+  const totalCategories = filteredCategories?.length || 0;
 
   // Get nominees for the active category
   const nominees = leaderboard?.filter(
@@ -81,7 +84,7 @@ export default function Leaderboard() {
     <Container size="xs" px="md">
 
 
-      <Group gap="sm" mb="lg">
+      <Group gap="sm" mb="md">
         <ThemeIcon size={36} radius="xl" variant="gradient" gradient={{ from: 'yellow.5', to: 'orange' }}>
           <IconTrophy size={20} stroke={2} />
         </ThemeIcon>
@@ -91,10 +94,23 @@ export default function Leaderboard() {
         </Box>
       </Group>
 
+      <TextInput
+        placeholder="Search categories..."
+        leftSection={<IconSearch size={16} />}
+        value={searchQuery}
+        onChange={(event) => {
+          setSearchQuery(event.currentTarget.value);
+          setActiveIndex(0);
+        }}
+        size="md"
+        radius="md"
+        mb="lg"
+      />
+
       {/* ── Horizontal scrollable category pills ── */}
       <ScrollArea scrollbarSize={0} offsetScrollbars type="never" mb="lg" viewportRef={scrollRef}>
         <Group gap={8} wrap="nowrap" pb={4}>
-          {categories?.map((cat, i) => {
+          {filteredCategories?.map((cat, i) => {
             const catConfig = getCategoryConfig(cat.name);
             const CatIcon = catConfig.icon;
             const isActive = i === activeIndex;
@@ -128,7 +144,13 @@ export default function Leaderboard() {
         </Group>
       </ScrollArea>
 
-      {/* ── Active category header ── */}
+      {totalCategories === 0 ? (
+        <Center mt="xl">
+          <Text c="dimmed">No categories found matching "{searchQuery}"</Text>
+        </Center>
+      ) : (
+        <>
+          {/* ── Active category header ── */}
       <Card
         padding="lg"
         withBorder={false}
@@ -231,7 +253,7 @@ export default function Leaderboard() {
                         </Text>
                       </Box>
                     </Group>
-                    <Badge size="lg" variant="light" color={accentColor} radius="xl">
+                    <Badge size="lg" variant="light" color={accentColor} radius="xl" style={{ flexShrink: 0 }}>
                       {nominee.out_total_score} pts
                     </Badge>
                   </Group>
@@ -267,6 +289,8 @@ export default function Leaderboard() {
           </Stack>
         )}
       </Box>
+      </>
+      )}
     </Container>
   );
 }
