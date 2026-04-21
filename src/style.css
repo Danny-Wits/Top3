@@ -1,0 +1,19 @@
+/* Global resets — Mantine handles everything else */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  background-color: #f1f7ff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[data-mantine-color-scheme="dark"] body {
+  background-color: var(--mantine-color-dark-8);
+}
