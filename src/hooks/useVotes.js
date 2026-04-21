@@ -58,6 +58,20 @@ export const useUpdateProfile = () => {
   });
 };
 
+// ─── All Profiles ──────────────────────────────────────────────────
+export const useAllProfiles = () => {
+  return useQuery({
+    queryKey: ['profiles'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('roll_number, avatar_url');
+      if (error) throw error;
+      return data;
+    },
+  });
+};
+
 // ─── Categories ──────────────────────────────────────────────────
 export const useCategories = () => {
   return useQuery({

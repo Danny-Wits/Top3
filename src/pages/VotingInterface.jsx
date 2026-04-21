@@ -56,8 +56,12 @@ export default function VotingInterface() {
 
   const config = getCategoryConfig(category.name);
   const CategoryIcon = config.icon;
-  const isPositive = category.type === 'positive';
-  const accentColor = isPositive ? 'indigo' : 'pink';
+  const getCategoryColor = (type) => {
+    if (type === 'most_likely') return 'cyan';
+    if (type === 'negative') return 'pink';
+    return 'indigo';
+  };
+  const accentColor = getCategoryColor(category.type);
 
   // Build roll number options with student names
   const allOptions = Array.from({ length: 50 }, (_, i) => {
@@ -124,9 +128,7 @@ export default function VotingInterface() {
         shadow="none"
         mb="xl"
         style={{
-          backgroundColor: isPositive
-            ? 'var(--mantine-color-indigo-light)'
-            : 'var(--mantine-color-pink-light)',
+          backgroundColor: `var(--mantine-color-${accentColor}-light)`,
         }}
       >
         <Group gap="md" wrap="nowrap">
@@ -222,9 +224,11 @@ export default function VotingInterface() {
             loading={castVoteMutation.isPending}
             variant="gradient"
             gradient={
-              isPositive
+              accentColor === 'indigo'
                 ? { from: 'indigo', to: 'cyan' }
-                : { from: 'pink', to: 'grape' }
+                : accentColor === 'pink'
+                ? { from: 'pink', to: 'grape' }
+                : { from: 'cyan', to: 'blue' }
             }
             styles={{ root: { height: 56 } }}
           >

@@ -21,6 +21,7 @@ export default function Dashboard() {
 
   const positiveCategories = categories?.filter(c => c.type === 'positive') || [];
   const negativeCategories = categories?.filter(c => c.type === 'negative') || [];
+  const mostLikelyCategories = categories?.filter(c => c.type === 'most_likely') || [];
 
   return (
     <Container size="xs" px="md">
@@ -61,6 +62,22 @@ export default function Dashboard() {
             isCompleted={completedCategories?.includes(cat.id)}
             onTap={() => navigate(`/vote/${cat.id}`)}
             colorScheme="pink"
+          />
+        ))}
+      </Stack>
+
+      {/* ---- MOST LIKELY TO SECTION ---- */}
+      <Text size="xs" fw={700} c="cyan.6" tt="uppercase" mb="xs" mt="xl">
+        Predict the Future
+      </Text>
+      <Stack gap="sm">
+        {mostLikelyCategories.map(cat => (
+          <CategoryCard
+            key={cat.id}
+            category={cat}
+            isCompleted={completedCategories?.includes(cat.id)}
+            onTap={() => navigate(`/vote/${cat.id}`)}
+            colorScheme="cyan"
           />
         ))}
       </Stack>

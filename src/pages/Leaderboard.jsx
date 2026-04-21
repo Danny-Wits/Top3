@@ -3,7 +3,7 @@ import {
   Container, Title, Text, Center, Loader, Group, Box, ThemeIcon,
   Card, Stack, Badge, Avatar, ScrollArea, UnstyledButton, Progress, Image,
 } from '@mantine/core';
-import { useCategories, useLeaderboard } from '../hooks/useVotes';
+import { useCategories, useLeaderboard, useAllProfiles } from '../hooks/useVotes';
 import { IconTrophy, IconMedal, IconAward, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import { getCategoryConfig } from '../lib/categoryConfig';
 import { getStudentName, getInitials } from '../lib/studentNames';
@@ -15,6 +15,7 @@ import { getStudentName, getInitials } from '../lib/studentNames';
 export default function Leaderboard() {
   const { data: categories, isLoading: isCatLoading } = useCategories();
   const { data: leaderboard, isLoading: isLeadLoading } = useLeaderboard();
+  const { data: profiles } = useAllProfiles();
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef(null);
 
@@ -41,8 +42,12 @@ export default function Leaderboard() {
 
   const config = activeCategory ? getCategoryConfig(activeCategory.name) : {};
   const CategoryIcon = config.icon;
-  const isPositive = activeCategory?.type === 'positive';
-  const accentColor = isPositive ? 'indigo' : 'pink';
+  const getCategoryColor = (type) => {
+    if (type === 'most_likely') return 'cyan';
+    if (type === 'negative') return 'pink';
+    return 'indigo';
+  };
+  const accentColor = getCategoryColor(activeCategory?.type);
 
   // Navigate between categories
   const goTo = (index) => {
@@ -93,7 +98,7 @@ export default function Leaderboard() {
             const catConfig = getCategoryConfig(cat.name);
             const CatIcon = catConfig.icon;
             const isActive = i === activeIndex;
-            const catColor = cat.type === 'positive' ? 'indigo' : 'pink';
+            const catColor = getCategoryColor(cat.type);
 
             return (
               <UnstyledButton
@@ -130,30 +135,28 @@ export default function Leaderboard() {
         shadow="none"
         mb="md"
         style={{
-          backgroundColor: isPositive
-            ? 'var(--mantine-color-indigo-light)'
-            : 'var(--mantine-color-pink-light)',
+          backgroundColor: `var(--mantine-color-${accentColor}-light)`,
         }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <Group justify="space-between" align="center">
+        <Group wrap="nowrap" align="center">
           <UnstyledButton
             onClick={() => goTo(activeIndex - 1)}
             disabled={activeIndex === 0}
-            style={{ opacity: activeIndex === 0 ? 0.3 : 1, padding: 4 }}
+            style={{ opacity: activeIndex === 0 ? 0.3 : 1, padding: 4, flexShrink: 0 }}
           >
             <IconChevronLeft size={22} />
           </UnstyledButton>
 
-          <Stack align="center" gap={4}>
+          <Stack align="center" gap={4} style={{ flex: 1, minWidth: 0 }}>
             <ThemeIcon size={52} radius="xl" variant="light" color={accentColor}>
               {CategoryIcon && <CategoryIcon size={26} stroke={1.8} />}
             </ThemeIcon>
-            <Text fw={800} size="lg" ta="center">{activeCategory?.name}</Text>
-            <Text c="dimmed" size="xs" ta="center">{config.description}</Text>
-            <Badge size="xs" variant="light" color={accentColor}>
+            <Text fw={800} size="lg" ta="center" lh={1.1} style={{ wordBreak: 'break-word' }}>{activeCategory?.name}</Text>
+            <Text c="dimmed" size="xs" ta="center" lh={1.2} style={{ wordBreak: 'break-word' }}>{config.description}</Text>
+            <Badge size="xs" variant="light" color={accentColor} mt={4}>
               {activeIndex + 1} / {totalCategories}
             </Badge>
           </Stack>
@@ -161,7 +164,7 @@ export default function Leaderboard() {
           <UnstyledButton
             onClick={() => goTo(activeIndex + 1)}
             disabled={activeIndex === totalCategories - 1}
-            style={{ opacity: activeIndex === totalCategories - 1 ? 0.3 : 1, padding: 4 }}
+            style={{ opacity: activeIndex === totalCategories - 1 ? 0.3 : 1, padding: 4, flexShrink: 0 }}
           >
             <IconChevronRight size={22} />
           </UnstyledButton>
@@ -188,6 +191,7 @@ export default function Leaderboard() {
               const studentName = getStudentName(nominee.out_nominee_roll_number);
               const initials = getInitials(studentName);
               const barPercent = Math.round((nominee.out_total_score / maxScore) * 100);
+              const profile = profiles?.find(p => p.roll_number === nominee.out_nominee_roll_number);
 
               return (
                 <Card
@@ -201,7 +205,7 @@ export default function Leaderboard() {
                   <Group justify="space-between" wrap="nowrap" mb="sm">
                     <Group gap="md" wrap="nowrap">
                       <Box style={{ position: 'relative' }}>
-                        <Avatar size={48} radius="xl" color={accentColor}>
+                        <Avatar size={48} radius="xl" color={accentColor} src={profile?.avatar_url || null}>
                           {initials}
                         </Avatar>
                         {/* Rank badge overlapping avatar bottom-right */}
@@ -247,9 +251,11 @@ export default function Leaderboard() {
                           height: '100%',
                           width: `${barPercent}%`,
                           borderRadius: 999,
-                          background: isPositive
+                          background: accentColor === 'indigo'
                             ? 'linear-gradient(90deg, var(--mantine-color-indigo-4), var(--mantine-color-cyan-4))'
-                            : 'linear-gradient(90deg, var(--mantine-color-pink-4), var(--mantine-color-grape-4))',
+                            : accentColor === 'pink'
+                            ? 'linear-gradient(90deg, var(--mantine-color-pink-4), var(--mantine-color-grape-4))'
+                            : 'linear-gradient(90deg, var(--mantine-color-cyan-4), var(--mantine-color-blue-4))',
                           transition: 'width 600ms ease',
                         }}
                       />
