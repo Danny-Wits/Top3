@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppShell, Loader, Center, Burger, Group, NavLink, Text, Image, useMantineColorScheme, useComputedColorScheme, Divider } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconDeviceLaptop, IconFileText, IconShieldLock, IconHelp, IconSun, IconMoon, IconLogout } from '@tabler/icons-react';
+import { IconDeviceLaptop, IconFileText, IconShieldLock, IconHelp, IconSun, IconMoon, IconLogout, IconTrophy } from '@tabler/icons-react';
 import { supabase } from './lib/supabaseClient';
 
 import Login from './pages/Login.jsx';
@@ -14,6 +14,8 @@ import AboutDev from './pages/AboutDev.jsx';
 import FAQ from './pages/FAQ.jsx';
 import PrivacyPolicy from './pages/PrivacyPolicy.jsx';
 import TermsOfService from './pages/TermsOfService.jsx';
+import GeneralLeaderboard from './pages/GeneralLeaderboard.jsx';
+import CategoryWinners from './pages/CategoryWinners.jsx';
 import BottomNav from './components/BottomNav.jsx';
 
 /**
@@ -62,6 +64,32 @@ function Shell({ children }) {
       </AppShell.Header>
 
       <AppShell.Navbar p="md">
+        <Text size="xs" fw={700} c="dimmed" tt="uppercase" mb="sm">
+          Leaderboards
+        </Text>
+        <NavLink
+          component={Link}
+          to="/general-leaderboard"
+          label="General Leaderboard"
+          leftSection={<IconTrophy size={18} />}
+          active={location.pathname === '/general-leaderboard'}
+          onClick={close}
+          variant="light"
+          color="indigo"
+        />
+        <NavLink
+          component={Link}
+          to="/category-winners"
+          label="Category Winners"
+          leftSection={<IconTrophy size={18} />}
+          active={location.pathname === '/category-winners'}
+          onClick={close}
+          variant="light"
+          color="indigo"
+        />
+
+        <Divider my="sm" />
+
         <Text size="xs" fw={700} c="dimmed" tt="uppercase" mb="sm">
           Information
         </Text>
@@ -196,6 +224,14 @@ export default function App() {
         <Route
           path="/leaderboard"
           element={<ProtectedRoute><Leaderboard /></ProtectedRoute>}
+        />
+        <Route
+          path="/general-leaderboard"
+          element={<ProtectedRoute><GeneralLeaderboard /></ProtectedRoute>}
+        />
+        <Route
+          path="/category-winners"
+          element={<ProtectedRoute><CategoryWinners /></ProtectedRoute>}
         />
         <Route
           path="/profile"
